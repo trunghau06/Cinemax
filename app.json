@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "Cinemax",
-    "slug": "Cinemax",
+    "slug": "cinemax",
+    "scheme": "cinemax",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +16,30 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.cinemax.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "navigationBar": {
+        "visible": "immersive"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-web-browser",
+      "@react-native-google-signin/google-signin"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "66f4a779-922c-442d-8d0b-b304abe0c0f2"
+      }
     }
   }
 }
