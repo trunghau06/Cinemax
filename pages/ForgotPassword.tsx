@@ -6,7 +6,7 @@ import { RootStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
 import FloatingInput from "../components/FloatingInput";
 import { useState } from "react";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 
 export default function ForgotPassword() {

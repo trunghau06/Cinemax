@@ -4,7 +4,7 @@
     import CategoryFilter from "../components/CategoryFilter";
     import MovieRow from "../components/MovieRow";
     import { useState, useEffect, useCallback, useRef } from "react";
-    import { tmdb } from "../tmdb";
+    import { tmdb } from "../services/tmdb";
     import Card from "../components/Card";
     import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 

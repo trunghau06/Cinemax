@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import FloatingInput from "../components/FloatingInput";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";

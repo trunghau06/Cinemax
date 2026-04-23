@@ -1,7 +1,7 @@
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { StyleSheet, View, Text, ActivityIndicator, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
-import { tmdb, IMAGE_URL } from "../tmdb";
+import { tmdb, IMAGE_URL } from "../services/tmdb";
 import { Ionicons, Feather, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";

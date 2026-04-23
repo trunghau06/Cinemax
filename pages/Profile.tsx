@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);

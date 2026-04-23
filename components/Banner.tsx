@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, Dimensions } from "react-native";
-import { tmdb, IMAGE_URL } from "../tmdb";
+import { tmdb, IMAGE_URL } from "../services/tmdb";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";

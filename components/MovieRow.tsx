@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { IMAGE_URL } from "../tmdb";
+import { IMAGE_URL } from "../services/tmdb";
 import { RootStackParamList } from "../types/navigation";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

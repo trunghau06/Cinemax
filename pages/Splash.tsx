@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParamList } from "../types/navigation";
-import { auth } from "../firebase";
+import { auth } from "../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setUser } from "../redux/user/userSlice";
 import { useAppDispatch } from "../hooks/hooks";

@@ -3,7 +3,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { tmdb } from "../tmdb";
+import { tmdb } from "../services/tmdb";
 import MovieRow from "../components/MovieRow";
 
 export default function AllMoviesPage() {
