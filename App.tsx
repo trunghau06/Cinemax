@@ -21,6 +21,7 @@ import {
 import BottomTabs from "./components/BottomTabs";
 import DetailPage from "./pages/DetailPage";
 import AllMoviesPage from "./pages/AllMoviesPage";
+import EditProfile from "./pages/EditProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -107,6 +108,11 @@ export default function App() {
           <Stack.Screen 
             name="AllMovies" 
             component={AllMoviesPage} 
+          />
+
+          <Stack.Screen 
+            name="EditProfile" 
+            component={EditProfile} 
           />
         </Stack.Navigator>
       </NavigationContainer>

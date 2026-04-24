@@ -7,9 +7,10 @@ type Props = {
     label: string;
     secureText?: boolean;
     onChangeText?: (text: string) => void;
+    onBlur?: () => void;
 };
 
-export default function FloatingInput({ label, secureText = false, onChangeText }: Props) {
+export default function FloatingInput({ label, secureText = false, onChangeText, onBlur }: Props) {
     const [value, setValue] = useState("");
     const [isFocused, setIsFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,7 @@ export default function FloatingInput({ label, secureText = false, onChangeText 
         if (!value) {
             Animated.timing(anim, { toValue: 0, duration: 180, useNativeDriver: false }).start();
         }
+        onBlur?.(); 
     };
 
     const labelTop   = anim.interpolate({ inputRange: [0, 1], outputRange: [15, -10] });

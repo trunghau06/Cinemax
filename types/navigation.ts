@@ -7,7 +7,8 @@ export type RootStackParamList = {
     Forgot: undefined;
     Home: undefined;
     Detail: { movieId: number }; 
-    AllMovies: { type: "Popular" | "Recommended" ; title: string}
+    AllMovies: { type: "Popular" | "Recommended" ; title: string};
+    EditProfile: undefined;
 };
 
 export type BottomTabParamList = {

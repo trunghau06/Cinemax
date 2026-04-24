@@ -4,9 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
 import { auth } from "../services/firebase";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList} from "../types/navigation";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -24,7 +28,9 @@ export default function Profile() {
                             {auth.currentUser?.email ?? "UserEmail"}
                         </Text>
                     </View>
-                    <Feather name="edit" size={24} color="#00e5ff" />
+                    <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+                        <Feather name="edit" size={20} color="#00e5ff" />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.cardComponent}> 
