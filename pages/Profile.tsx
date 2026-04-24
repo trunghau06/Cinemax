@@ -7,10 +7,19 @@ import { auth } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
+import { useState } from "react";
+import LogoutModal from "../components/LogOutModal";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+    const handleLogOut = async () => {
+        await auth.signOut();
+        setShowLogoutModal(false);
+        navigation.navigate("LogSign");
+    }
 
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
@@ -81,10 +90,15 @@ export default function Profile() {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.btn__logOut}>
+                <TouchableOpacity style={styles.btn__logOut} onPress={() => setShowLogoutModal(true)}>
                     <Text style={styles.btn__logOut__text}>Log Out</Text>
                 </TouchableOpacity>
             </ScrollView>
+            <LogoutModal
+                visible={showLogoutModal}
+                onConfirm={handleLogOut}
+                onCancel={() => setShowLogoutModal(false)}
+            />
         </SafeAreaView>
     );
 }

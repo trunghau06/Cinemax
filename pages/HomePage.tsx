@@ -13,6 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { BottomTabParamList, RootStackParamList } from "../types/navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
+import LogoutModal from "../components/LogOutModal";
 
 const GENRE_MAP: Record<string, number> = {
     Comedy: 35, Animation: 16, Documentary: 99, Action: 28,
@@ -26,6 +27,7 @@ export default function HomePage() {
     const [loadingPopular, setLoadingPopular] = useState(false);
     const [loadingCategory, setLoadingCategory] = useState(false);
     const homeInputRef = useRef<TextInput>(null);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -35,6 +37,12 @@ export default function HomePage() {
 
     const navigation = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
     const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const handleLogOut = async () => {
+        await auth.signOut();
+        setShowLogoutModal(false);
+        navigationRoot.navigate("LogSign");
+    }
 
     useEffect(() => {
         setLoadingPopular(true);
@@ -81,7 +89,7 @@ export default function HomePage() {
                         </View>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setShowLogoutModal(true)}>
                         <Ionicons name="log-out-outline" size={28} color="#FF4D6D" />
                     </TouchableOpacity>
                 </View>
@@ -158,6 +166,11 @@ export default function HomePage() {
                     />
                 }
             </ScrollView>
+            <LogoutModal
+                visible={showLogoutModal}
+                onConfirm={handleLogOut}
+                onCancel={() => setShowLogoutModal(false)}
+            />
         </SafeAreaView>
     );
 }
