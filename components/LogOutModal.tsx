@@ -22,7 +22,7 @@ export default function LogoutModal({ visible, onConfirm, onCancel }: Props) {
 
                     <Text style={styles.title}>Are you sure ?</Text>
                     <Text style={styles.subtitle}>
-                        Ullamcorper imperdiet urna id non sed est sem. Rhoncus amet, enim purus gravida donec aliquet.
+                        Logging out will end your current session. You can log back in anytime.
                     </Text>
 
                     <View style={styles.btnRow}>
