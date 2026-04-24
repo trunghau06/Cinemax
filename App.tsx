@@ -22,6 +22,8 @@ import BottomTabs from "./components/BottomTabs";
 import DetailPage from "./pages/DetailPage";
 import AllMoviesPage from "./pages/AllMoviesPage";
 import EditProfile from "./pages/EditProfile";
+import PrivacyPage from "./pages/PrivacyPage";
+import AboutUs from "./pages/AboutUs";
 
 const Stack = createNativeStackNavigator();
 
@@ -113,6 +115,16 @@ export default function App() {
           <Stack.Screen 
             name="EditProfile" 
             component={EditProfile} 
+          />
+
+          <Stack.Screen 
+            name="Privacy" 
+            component={PrivacyPage} 
+          />
+
+          <Stack.Screen 
+            name="Aboutus" 
+            component={AboutUs} 
           />
         </Stack.Navigator>
       </NavigationContainer>

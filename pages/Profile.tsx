@@ -49,13 +49,15 @@ export default function Profile() {
                 <View style={styles.cardComponent}> 
                     <Text style={styles.cardComponent__title}>More</Text>
                     <View style={styles.card}>
-                        <View style={styles.card__content}>
+                        <TouchableOpacity style={styles.card__content} onPress={() => navigation.navigate("Privacy")}>
                             <View style={styles.card__content__icon}>
                                 <FontAwesome6 name="shield" size={20} color="#00e5ff" />
                             </View>
                             <Text style={styles.card__content__title}>Legal and Policies</Text>
-                        </View>
-                        <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                        </TouchableOpacity>                          
+                        <TouchableOpacity onPress={() => navigation.navigate("Privacy")}>
+                            <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.card}>
@@ -69,13 +71,15 @@ export default function Profile() {
                     </View>
 
                     <View style={styles.card}>
-                        <View style={styles.card__content}>
+                        <TouchableOpacity style={styles.card__content} onPress={() => navigation.navigate("Aboutus")}>
                             <View style={styles.card__content__icon}>
                                 <Foundation name="info" size={28} color="#00e5ff" />
                             </View>
                             <Text style={styles.card__content__title}>About us</Text>
-                        </View>
-                        <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate("Aboutus")}>
+                            <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
