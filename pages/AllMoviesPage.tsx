@@ -33,6 +33,13 @@ export default function AllMoviesPage() {
                         [1, 2, 3, 4, 5].map(p => tmdb.get("/movie/top_rated", { params: { page: p } }))
                     );
                     setMovies(pages.flatMap(res => res.data.results));
+                } else if (type === "Recommended") {
+                    const res = await tmdb.get("/movie/now_playing");
+                    const firstId = res.data.results[0]?.id;
+                    if (firstId) {
+                        const recRes = await tmdb.get(`/movie/${firstId}/recommendations`);
+                        setMovies(recRes.data.results);
+                    }
                 } else {
                     const res = await tmdb.get("/discover/movie", { params: { with_genres: GENRE_MAP[type] } });
                     setMovies(res.data.results);
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
 
     header__title: {
         color: "#FFFFFF",
-        fontSize: 18,
+        fontSize: 20,
         fontFamily: "PoppinsBold",
     },
 });
