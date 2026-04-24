@@ -24,6 +24,7 @@ import AllMoviesPage from "./pages/AllMoviesPage";
 import EditProfile from "./pages/EditProfile";
 import PrivacyPage from "./pages/PrivacyPage";
 import AboutUs from "./pages/AboutUs";
+import HelpFeed from "./pages/HelpFeed";
 
 const Stack = createNativeStackNavigator();
 
@@ -125,6 +126,11 @@ export default function App() {
           <Stack.Screen 
             name="Aboutus" 
             component={AboutUs} 
+          />
+
+          <Stack.Screen 
+            name="HelpFeed" 
+            component={HelpFeed} 
           />
         </Stack.Navigator>
       </NavigationContainer>

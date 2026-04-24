@@ -6,11 +6,12 @@ import { selectUserName } from "../redux/user/useSelectors";
 import { auth } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList} from "../types/navigation";
+import { RootStackParamList } from "../types/navigation";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -33,9 +34,9 @@ export default function Profile() {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.cardComponent}> 
+                <View style={styles.cardComponent}>
                     <Text style={styles.cardComponent__title}>Account</Text>
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card}>
                         <View style={styles.card__content}>
                             <View style={styles.card__content__icon}>
                                 <Ionicons name="lock-closed-outline" size={20} color="#00e5ff" />
@@ -43,24 +44,23 @@ export default function Profile() {
                             <Text style={styles.card__content__title}>Change Password</Text>
                         </View>
                         <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
-                <View style={styles.cardComponent}> 
+                <View style={styles.cardComponent}>
                     <Text style={styles.cardComponent__title}>More</Text>
-                    <View style={styles.card}>
-                        <TouchableOpacity style={styles.card__content} onPress={() => navigation.navigate("Privacy")}>
+
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("Privacy")}>
+                        <View style={styles.card__content}>
                             <View style={styles.card__content__icon}>
                                 <FontAwesome6 name="shield" size={20} color="#00e5ff" />
                             </View>
                             <Text style={styles.card__content__title}>Legal and Policies</Text>
-                        </TouchableOpacity>                          
-                        <TouchableOpacity onPress={() => navigation.navigate("Privacy")}>
-                            <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                        <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                    </TouchableOpacity>
 
-                    <View style={styles.card}>
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("HelpFeed")}>
                         <View style={styles.card__content}>
                             <View style={styles.card__content__icon}>
                                 <Ionicons name="help-circle-sharp" size={28} color="#00e5ff" />
@@ -68,19 +68,17 @@ export default function Profile() {
                             <Text style={styles.card__content__title}>Help & Feedback</Text>
                         </View>
                         <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.card}>
-                        <TouchableOpacity style={styles.card__content} onPress={() => navigation.navigate("Aboutus")}>
+                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("Aboutus")}>
+                        <View style={styles.card__content}>
                             <View style={styles.card__content__icon}>
                                 <Foundation name="info" size={28} color="#00e5ff" />
                             </View>
                             <Text style={styles.card__content__title}>About us</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate("Aboutus")}>
-                            <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                        <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.btn__logOut}>
@@ -88,21 +86,21 @@ export default function Profile() {
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
-    );  
+    );
 }
 
 const styles = StyleSheet.create({
-    container : {
+    container: {
         flex: 1,
         backgroundColor: "#161D2F",
         paddingBottom: 16,
     },
 
-    header : {
-        paddingHorizontal: 24
+    header: {
+        paddingHorizontal: 24,
     },
 
-    header__title : {
+    header__title: {
         textAlign: 'center',
         fontSize: 24,
         color: '#FFFFFF',
@@ -122,7 +120,7 @@ const styles = StyleSheet.create({
         borderColor: "rgba(0, 229, 255, 0.1)",
     },
 
-    cardUser__avatar : {
+    cardUser__avatar: {
         width: 42,
         height: 42,
         borderRadius: 24,
@@ -135,14 +133,10 @@ const styles = StyleSheet.create({
         fontFamily: "PoppinsBold",
     },
 
-    cardUser__email : {
+    cardUser__email: {
         color: "#888",
         fontSize: 12,
         fontFamily: "PoppinsRegular",
-    },
-
-    cardUser__edit : {
-
     },
 
     cardComponent: {
@@ -168,7 +162,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         paddingVertical: 16,
-        borderColor: "transparent",
         borderBottomColor: "rgba(128, 201, 214, 0.3)",
         borderBottomWidth: 1,
     },
@@ -192,10 +185,10 @@ const styles = StyleSheet.create({
         color: "#FFFFFF",
         fontSize: 16,
         fontFamily: "PoppinsRegular",
-        lineHeight: 20
+        lineHeight: 20,
     },
 
-    btn__logOut : {
+    btn__logOut: {
         backgroundColor: "#1e2640",
         borderRadius: 32,
         flexDirection: "row",
@@ -209,10 +202,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    btn__logOut__text : {
+    btn__logOut__text: {
         textAlign: 'center',
         color: '#f87373',
         fontSize: 16,
-        fontFamily: 'PoppinsRegular'
-    }
+        fontFamily: 'PoppinsRegular',
+    },
 });
