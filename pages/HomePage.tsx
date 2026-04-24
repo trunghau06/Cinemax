@@ -36,26 +36,25 @@ export default function HomePage() {
     const navigation = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
     const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-
     useEffect(() => {
         setLoadingPopular(true);
         tmdb.get("/movie/top_rated")
-        .then(res => setPopular(res.data.results.slice(0, 10)))
-        .finally(() => setLoadingPopular(false));
+            .then(res => setPopular(res.data.results.slice(0, 10)))
+            .finally(() => setLoadingPopular(false));
     }, []);
 
     useEffect(() => {
         setLoadingCategory(true);
         if (selectedCat === "All") {
             tmdb.get("/movie/now_playing")
-            .then(res => setCategoryMovies(res.data.results))
-            .finally(() => setLoadingCategory(false));
+                .then(res => setCategoryMovies(res.data.results))
+                .finally(() => setLoadingCategory(false));
         } else {
             tmdb.get("/discover/movie", {
                 params: { with_genres: GENRE_MAP[selectedCat] }
             })
-            .then(res => setCategoryMovies(res.data.results))
-            .finally(() => setLoadingCategory(false));
+                .then(res => setCategoryMovies(res.data.results))
+                .finally(() => setLoadingCategory(false));
         }
     }, [selectedCat]);
 
@@ -65,7 +64,6 @@ export default function HomePage() {
                 {/* Header */}
                 <View style={styles.header}>
                     <View style={styles.header__left}>
-                        {/* Avatar */}
                         <Image
                             source={
                                 auth.currentUser?.photoURL
@@ -75,8 +73,6 @@ export default function HomePage() {
                             style={styles.header__left__avatar}
                             resizeMode="cover"
                         />
-
-                        {/* Name */}
                         <View>
                             <Text style={styles.header__left__name}>
                                 {userName ? `Hello, ${userName}` : "Hello, User"}
@@ -91,10 +87,7 @@ export default function HomePage() {
                 </View>
 
                 {/* Search */}
-                <TouchableOpacity
-                    style={styles.search}
-                    activeOpacity={1}
-                >
+                <TouchableOpacity style={styles.search} activeOpacity={1}>
                     <Ionicons name="search-outline" size={18} color="#666" />
                     <TextInput
                         ref={homeInputRef}
@@ -115,9 +108,17 @@ export default function HomePage() {
                 <Banner />
 
                 {/* Categories */}
-                <Text style={styles.categories__title}>Categories</Text>
+                <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionHeader__title}>Categories</Text>
+                    <TouchableOpacity onPress={() => navigationRoot.navigate("AllMovies", {
+                        type: selectedCat as any,
+                        title: selectedCat === "All" ? "All Movies" : selectedCat,
+                    })}>
+                        <Text style={styles.sectionHeader__seeAll}>See All</Text>
+                    </TouchableOpacity>
+                </View>
                 <CategoryFilter selected={selectedCat} onSelect={setSelectedCat} />
-                
+
                 {loadingCategory
                     ? <ActivityIndicator color="#00e5ff" style={{ height: 232, justifyContent: "center" }} />
                     : <FlatList
@@ -133,12 +134,16 @@ export default function HomePage() {
                 }
 
                 {/* Most Popular */}
-                <View style={styles.popular}>
-                    <Text style={styles.popular__title}>Most Popular</Text>
-                    <TouchableOpacity onPress={() => (navigationRoot as any).navigate("AllMovies", { type: "popular", title: "Most Popular" })}>
-                        <Text style={styles.popular__text_all}>See All</Text>
+                <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionHeader__title}>Most Popular</Text>
+                    <TouchableOpacity onPress={() => navigationRoot.navigate("AllMovies", {
+                        type: "Popular",
+                        title: "Most Popular",
+                    })}>
+                        <Text style={styles.sectionHeader__seeAll}>See All</Text>
                     </TouchableOpacity>
                 </View>
+
                 {loadingPopular
                     ? <ActivityIndicator color="#00e5ff" style={{ height: 232, justifyContent: "center" }} />
                     : <FlatList
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#161D2F",
-        paddingBottom: 16
+        paddingBottom: 16,
     },
 
     header: {
@@ -171,7 +176,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 16,
         paddingBottom: 12,
-        marginBottom: 12
+        marginBottom: 12,
     },
 
     header__left: {
@@ -212,29 +217,31 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
 
-    search__input: {
-        flex: 1,
-        color: "#fff",
-        fontFamily: "PoppinsRegular",
-        fontSize: 14,
-    },
-
     search__divider: {
         width: 1,
         height: 20,
         backgroundColor: "#424244",
     },
 
-    categories: {
-        marginBottom: 8
+    sectionHeader: {
+        flexDirection: "row",
+        paddingHorizontal: 24,
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 24,
+        marginBottom: 12,
     },
 
-    categories__title: {
-        color: "#FFFFFF",
+    sectionHeader__title: {
         fontSize: 20,
         fontFamily: "PoppinsBold",
-        paddingHorizontal: 24,
-        marginBottom: 12,
+        color: "#FFFFFF",
+    },
+
+    sectionHeader__seeAll: {
+        fontSize: 16,
+        fontFamily: "PoppinsRegular",
+        color: "#00e5ff",
     },
 
     categories__btn: {
@@ -260,24 +267,4 @@ const styles = StyleSheet.create({
         color: "#00e5ff",
         fontFamily: "PoppinsBold",
     },
-
-    popular: {
-        flexDirection: 'row',
-        paddingHorizontal: 24,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 24
-    },
-
-    popular__title: {
-        fontSize: 20,
-        fontFamily: 'PoppinsBold',
-        color: '#FFFFFF'
-    },
-
-    popular__text_all: {
-        fontSize: 16,
-        fontFamily: 'PoppinsRegular',
-        color: '#00e5ff'
-    }
 });

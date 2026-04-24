@@ -7,7 +7,7 @@ export type RootStackParamList = {
     Forgot: undefined;
     Home: undefined;
     Detail: { movieId: number }; 
-    AllMovies: { type: "Popular" | "Recommended" ; title: string};
+    AllMovies: { type: "Popular" | "Recommended" | "Comedy" | "Animation" | "Documentary" | "Action" | "All"; title: string }
     EditProfile: undefined;
     Privacy: undefined;
     Aboutus: undefined;

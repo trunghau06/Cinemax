@@ -6,54 +6,60 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { tmdb } from "../services/tmdb";
 import MovieRow from "../components/MovieRow";
 
+const GENRE_MAP: Record<string, number> = {
+    Comedy: 35, Animation: 16, Documentary: 99, Action: 28,
+};
+
 export default function AllMoviesPage() {
     const navigation = useNavigation();
     const route = useRoute<any>();
-    const {type, title} = route.params;
+    const { type, title } = route.params;
 
     const [loading, setLoading] = useState(false);
-    const [movies, setMovies] = useState<any>([]);
+    const [movies, setMovies] = useState<any[]>([]);
 
     useEffect(() => {
         setLoading(true);
-        const endpoint = type === "popular" ? "/movie/top_rated" : "/movie/now_playing";
-        tmdb.get(endpoint)
-            .then(async (res) => {
-                const basic = res.data.results;
-                const detailed = await Promise.all(
-                    basic.slice(0, 20).map(async (movie: any) => {
-                        try {
-                            const [detailRes, certRes] = await Promise.all([
-                                tmdb.get(`/movie/${movie.id}`),
-                                tmdb.get(`/movie/${movie.id}/release_dates`)
-                            ]);
-                            const runtime = detailRes.data.runtime;
-                            const us = certRes.data.results.find((r: any) => r.iso_3166_1 === "US");
-                            const cert = us?.release_dates?.[0]?.certification || "";
-                            return { ...movie, runtime, certification: cert };
-                        } catch {
-                            return movie;
-                        }
-                    })
-                );
-                setMovies(detailed);
-            })
-            .finally(() => setLoading(false));
+
+        const fetchMovies = async () => {
+            try {
+                if (type === "All") {
+                    const pages = await Promise.all(
+                        [1, 2, 3, 4, 5].map(p => tmdb.get("/movie/now_playing", { params: { page: p } }))
+                    );
+                    setMovies(pages.flatMap(res => res.data.results));
+                } else if (type === "Popular") {
+                    const pages = await Promise.all(
+                        [1, 2, 3, 4, 5].map(p => tmdb.get("/movie/top_rated", { params: { page: p } }))
+                    );
+                    setMovies(pages.flatMap(res => res.data.results));
+                } else {
+                    const res = await tmdb.get("/discover/movie", { params: { with_genres: GENRE_MAP[type] } });
+                    setMovies(res.data.results);
+                }
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMovies();
     }, [type]);
 
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={24} color="#fff" />
+                <TouchableOpacity style={styles.header__backBtn} onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={22} color="#fff" />
                 </TouchableOpacity>
                 <Text style={styles.header__title}>{title}</Text>
-                <View style={{width: 24}}></View>
+                <View style={{ width: 36 }} />
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} style={{paddingTop: 12}}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ paddingTop: 12 }}>
                 {loading
-                    ? <ActivityIndicator color="#00e5ff" style={{marginTop: 40}} />
+                    ? <ActivityIndicator color="#00e5ff" style={{ marginTop: 40 }} />
                     : movies.map((movie: any) => (
                         <MovieRow key={movie.id} movie={movie} />
                     ))
@@ -69,6 +75,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#161D2F",
         paddingBottom: 16,
     },
+
     header: {
         flexDirection: "row",
         alignItems: "center",
@@ -76,10 +83,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingVertical: 16,
     },
+
+    header__backBtn: {
+        width: 36, height: 36, borderRadius: 10,
+        backgroundColor: "#1e2640",
+        alignItems: "center", justifyContent: "center",
+    },
+
     header__title: {
         color: "#FFFFFF",
         fontSize: 18,
         fontFamily: "PoppinsBold",
-        lineHeight: 16
     },
 });
