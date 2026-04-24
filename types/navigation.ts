@@ -9,6 +9,7 @@ export type RootStackParamList = {
     Detail: { movieId: number }; 
     AllMovies: { type: "Popular" | "Recommended" ; title: string};
     EditProfile: undefined;
+    Privacy: undefined;
 };
 
 export type BottomTabParamList = {

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/navigation";
 import { useAppSelector } from "../hooks/hooks";
@@ -82,97 +82,106 @@ export default function EditProfile() {
 
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
-            <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.header__backBtn} onPress={() => navigation.goBack()}>
-                        <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
-                    </TouchableOpacity>
-                    <Text style={styles.header__title}>Edit Profile</Text>
-                    <View style={{ width: 36 }} />
-                </View>
-
-                {/* Avatar */}
-                <View style={styles.avatarSection}>
-                    <View style={styles.avatarSection__wrapper}>
-                        <Image
-                            source={require('../assets/HomePage/default_avatar.jpg')}
-                            style={styles.avatarSection__image}
-                            resizeMode="cover"
-                        />
-                        <TouchableOpacity style={styles.avatarSection__editBtn}>
-                            <Ionicons name="pencil" size={12} color="#FFFFFF" />
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.avatarSection__name}>{userName ?? "User Name"}</Text>
-                    <Text style={styles.avatarSection__email}>{auth.currentUser?.email ?? "user@email.com"}</Text>
-                </View>
-
-                {/* Form */}
-                <View style={styles.form}>
-                    <View>
-                        <FloatingInput
-                            label="Full Name"
-                            onChangeText={(text) => { setFullName(text); fullNameRef.current = text; setNameError(""); }}
-                            onBlur={() => {
-                                const val = fullNameRef.current;
-                                if (!val.trim()) setNameError("* Full name is required");
-                                else if (!/^[a-zA-ZÀ-ỹ\s]{2,50}$/.test(val.trim())) setNameError("* Name only contains letters, at least 2 characters");
-                                else setNameError("");
-                            }}
-                        />
-                        {nameError ? <Text style={styles.form__error}>{nameError}</Text> : null}
-                    </View>
-                    <View>
-                        <FloatingInput
-                            label="Email"
-                            onChangeText={(text) => { setEmail(text); emailRef.current = text; setEmailError(""); }}
-                            onBlur={() => {
-                                const val = emailRef.current;
-                                if (!val.trim()) setEmailError("* Email is required");
-                                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim())) setEmailError("* Invalid email format");
-                                else setEmailError("");
-                            }}
-                        />
-                        {emailError ? <Text style={styles.form__error}>{emailError}</Text> : null}
-                    </View>
-                    <View>
-                        <FloatingInput
-                            label="Password"
-                            secureText
-                            onChangeText={(text) => { setPassword(text); passwordRef.current = text; setPasswordError(""); }}
-                            onBlur={() => {
-                                const val = passwordRef.current;
-                                if (!val.trim()) setPasswordError("* Password is required");
-                                else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(val)) setPasswordError("* Min 6 chars, include letters and numbers");
-                                else setPasswordError("");
-                            }}
-                        />
-                        {passwordError ? <Text style={styles.form__error}>{passwordError}</Text> : null}
-                    </View>
-                    <View>
-                        <FloatingInput
-                            label="Phone Number"
-                            onChangeText={(text) => { setPhone(text); phoneRef.current = text; setPhoneError(""); }}
-                            onBlur={() => {
-                                const val = phoneRef.current;
-                                if (!val.trim()) setPhoneError("* Phone number is required");
-                                else if (!/^\+?\d{9,11}$/.test(val.replace(/\s/g, ""))) setPhoneError("* Invalid phone number (9-11 digits)");
-                                else setPhoneError("");
-                            }}
-                        />
-                        {phoneError ? <Text style={styles.form__error}>{phoneError}</Text> : null}
-                    </View>
-                </View>
-
-                <TouchableOpacity
-                    activeOpacity={0.85}
-                    style={styles.saveBtn}
-                    onPress={handleSave}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+                <ScrollView
+                    contentContainerStyle={styles.scroll}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                 >
-                    <Text style={styles.saveBtn__text}>Save Changes</Text>
-                </TouchableOpacity>
-            </ScrollView>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <TouchableOpacity style={styles.header__backBtn} onPress={() => navigation.goBack()}>
+                            <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
+                        </TouchableOpacity>
+                        <Text style={styles.header__title}>Edit Profile</Text>
+                        <View style={{ width: 36 }} />
+                    </View>
+
+                    {/* Avatar */}
+                    <View style={styles.avatarSection}>
+                        <View style={styles.avatarSection__wrapper}>
+                            <Image
+                                source={require('../assets/HomePage/default_avatar.jpg')}
+                                style={styles.avatarSection__image}
+                                resizeMode="cover"
+                            />
+                            <TouchableOpacity style={styles.avatarSection__editBtn}>
+                                <Ionicons name="pencil" size={12} color="#FFFFFF" />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.avatarSection__name}>{userName ?? "User Name"}</Text>
+                        <Text style={styles.avatarSection__email}>{auth.currentUser?.email ?? "user@email.com"}</Text>
+                    </View>
+
+                    {/* Form */}
+                    <View style={styles.form}>
+                        <View>
+                            <FloatingInput
+                                label="Full Name"
+                                onChangeText={(text) => { setFullName(text); fullNameRef.current = text; setNameError(""); }}
+                                onBlur={() => {
+                                    const val = fullNameRef.current;
+                                    if (!val.trim()) setNameError("* Full name is required");
+                                    else if (!/^[a-zA-ZÀ-ỹ\s]{2,50}$/.test(val.trim())) setNameError("* Name only contains letters, at least 2 characters");
+                                    else setNameError("");
+                                }}
+                            />
+                            {nameError ? <Text style={styles.form__error}>{nameError}</Text> : null}
+                        </View>
+                        <View>
+                            <FloatingInput
+                                label="Email"
+                                onChangeText={(text) => { setEmail(text); emailRef.current = text; setEmailError(""); }}
+                                onBlur={() => {
+                                    const val = emailRef.current;
+                                    if (!val.trim()) setEmailError("* Email is required");
+                                    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim())) setEmailError("* Invalid email format");
+                                    else setEmailError("");
+                                }}
+                            />
+                            {emailError ? <Text style={styles.form__error}>{emailError}</Text> : null}
+                        </View>
+                        <View>
+                            <FloatingInput
+                                label="Password"
+                                secureText
+                                onChangeText={(text) => { setPassword(text); passwordRef.current = text; setPasswordError(""); }}
+                                onBlur={() => {
+                                    const val = passwordRef.current;
+                                    if (!val.trim()) setPasswordError("* Password is required");
+                                    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(val)) setPasswordError("* Min 6 chars, include letters and numbers");
+                                    else setPasswordError("");
+                                }}
+                            />
+                            {passwordError ? <Text style={styles.form__error}>{passwordError}</Text> : null}
+                        </View>
+                        <View>
+                            <FloatingInput
+                                label="Phone Number"
+                                onChangeText={(text) => { setPhone(text); phoneRef.current = text; setPhoneError(""); }}
+                                onBlur={() => {
+                                    const val = phoneRef.current;
+                                    if (!val.trim()) setPhoneError("* Phone number is required");
+                                    else if (!/^\+?\d{9,11}$/.test(val.replace(/\s/g, ""))) setPhoneError("* Invalid phone number (9-11 digits)");
+                                    else setPhoneError("");
+                                }}
+                            />
+                            {phoneError ? <Text style={styles.form__error}>{phoneError}</Text> : null}
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        activeOpacity={0.85}
+                        style={styles.saveBtn}
+                        onPress={handleSave}
+                    >
+                        <Text style={styles.saveBtn__text}>Save Changes</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
@@ -181,7 +190,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#161D2F",
-        paddingBottom: 16,
     },
 
     scroll: {
