@@ -48,9 +48,9 @@ export default function Profile() {
                     <TouchableOpacity style={styles.card}>
                         <View style={styles.card__content}>
                             <View style={styles.card__content__icon}>
-                                <Ionicons name="lock-closed-outline" size={20} color="#00e5ff" />
+                                <Ionicons name="person-outline" size={20} color="#00e5ff" />
                             </View>
-                            <Text style={styles.card__content__title}>Change Password</Text>
+                            <Text style={styles.card__content__title}>Member</Text>
                         </View>
                         <MaterialIcons name="navigate-next" size={32} color="#00e5ff" />
                     </TouchableOpacity>
