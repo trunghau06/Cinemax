@@ -1,14 +1,17 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/navigation";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import FloatingInput from "../components/FloatingInput";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { doc, getDoc, setDoc } from "@firebase/firestore";
+import { updateProfile, updateEmail, updatePassword } from "firebase/auth";
+import { setUser } from "../redux/user/userSlice";
 
 export default function EditProfile() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -23,11 +26,29 @@ export default function EditProfile() {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [phoneError, setPhoneError] = useState("");
+    const [avatar, setAvatar] = useState<string | null>(null);
 
     const fullNameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
     const phoneRef = useRef("");
+
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        const loadProfile = async () => {
+            const user = auth.currentUser;
+            if(!user) return;
+
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists()) {
+                const data = snap.data();
+                if(data.fullName) setFullName(data.fullName);
+                if(data.email) setEmail(data.email);
+                if(data.phone) setPhone(data.phone);
+            }
+        };
+        loadProfile();
+    }, []);
 
     const validate = () => {
         let valid = true;
@@ -52,10 +73,7 @@ export default function EditProfile() {
             setEmailError("");
         }
 
-        if (!password.trim()) {
-            setPasswordError("* Password is required");
-            valid = false;
-        } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
+        if (password.trim() && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
             setPasswordError("* Min 6 chars, include letters and numbers");
             valid = false;
         } else {
@@ -75,9 +93,39 @@ export default function EditProfile() {
         return valid;
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!validate()) return;
-        // TODO: xử lý save sau
+        
+        try {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            await updateProfile(user, { displayName: fullName });
+            dispatch(setUser(fullName));
+
+            if(email !== user.email) {
+                await updateEmail(user, email);
+            }
+
+            if (password.trim()) {
+                await updatePassword(user, password);
+            }
+
+            await setDoc(doc(db, "users", user.uid), {
+                fullName,
+                email,
+                phone,
+                updatedAt: new Date().toISOString(),
+            }, { merge: true });
+
+            navigation.goBack();          
+        } catch(error: any) {
+            if (error.code === "auth/requires-recent-login") {
+                Alert.alert("Session expired", "Please log out and log back in.");
+            } else {
+                Alert.alert("Error", error.message);
+            }
+        }
     };
 
     return (
@@ -104,7 +152,9 @@ export default function EditProfile() {
                     <View style={styles.avatarSection}>
                         <View style={styles.avatarSection__wrapper}>
                             <Image
-                                source={require('../assets/HomePage/default_avatar.jpg')}
+                                source={
+                                    require('../assets/HomePage/default_avatar.jpg')
+                                }
                                 style={styles.avatarSection__image}
                                 resizeMode="cover"
                             />
@@ -121,6 +171,7 @@ export default function EditProfile() {
                         <View>
                             <FloatingInput
                                 label="Full Name"
+                                value={fullName}
                                 onChangeText={(text) => { setFullName(text); fullNameRef.current = text; setNameError(""); }}
                                 onBlur={() => {
                                     const val = fullNameRef.current;
@@ -134,6 +185,7 @@ export default function EditProfile() {
                         <View>
                             <FloatingInput
                                 label="Email"
+                                value={email}
                                 onChangeText={(text) => { setEmail(text); emailRef.current = text; setEmailError(""); }}
                                 onBlur={() => {
                                     const val = emailRef.current;
@@ -146,14 +198,17 @@ export default function EditProfile() {
                         </View>
                         <View>
                             <FloatingInput
-                                label="Password"
+                                label="New Password (optional)"
+                                value={password}
                                 secureText
                                 onChangeText={(text) => { setPassword(text); passwordRef.current = text; setPasswordError(""); }}
                                 onBlur={() => {
                                     const val = passwordRef.current;
-                                    if (!val.trim()) setPasswordError("* Password is required");
-                                    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(val)) setPasswordError("* Min 6 chars, include letters and numbers");
-                                    else setPasswordError("");
+                                    if (val.trim() && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(val)) {
+                                        setPasswordError("* Min 6 chars, include letters and numbers");
+                                    } else {
+                                        setPasswordError("");
+                                    }
                                 }}
                             />
                             {passwordError ? <Text style={styles.form__error}>{passwordError}</Text> : null}
@@ -161,6 +216,7 @@ export default function EditProfile() {
                         <View>
                             <FloatingInput
                                 label="Phone Number"
+                                value={phone}
                                 onChangeText={(text) => { setPhone(text); phoneRef.current = text; setPhoneError(""); }}
                                 onBlur={() => {
                                     const val = phoneRef.current;

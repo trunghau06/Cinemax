@@ -79,8 +79,8 @@ export default function LogIn() {
 
                 {/* Form */}
                 <View style={styles.form}>
-                    <FloatingInput label="Email Address" onChangeText={setEmail}/>
-                    <FloatingInput label="Password" secureText onChangeText={setPassword}/>
+                    <FloatingInput label="Email Address" value={email} onChangeText={setEmail} />
+                    <FloatingInput label="Password" value={password} secureText onChangeText={setPassword} />
                 </View>
 
                 <TouchableOpacity style={styles.forgot} onPress={() => navigation.navigate('Forgot')}>

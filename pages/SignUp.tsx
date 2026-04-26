@@ -96,12 +96,10 @@ export default function SignUp() {
                 <Text style={styles.title__subtitle}>The latest movies and series{"\n"}are here</Text>
 
                 {/* Form */}
-                <View style={styles.form}>
-                    <FloatingInput label="Full Name" onChangeText={setName} />
-                    <FloatingInput label="Email Address" onChangeText={setEmail} />
-                    <FloatingInput label="Password" secureText onChangeText={setPassword} />
-                    <FloatingInput label="Phone Number" onChangeText={setPhone} />
-                </View>
+                <FloatingInput label="Full Name" value={name} onChangeText={setName} />
+                <FloatingInput label="Email Address" value={email} onChangeText={setEmail} />
+                <FloatingInput label="Password" value={password} secureText onChangeText={setPassword} />
+                <FloatingInput label="Phone Number" value={phone} onChangeText={setPhone} />
 
                 {/* Checkbox */}
                 <TouchableOpacity style={styles.agree} onPress={() => setAgreed(v => !v)} activeOpacity={0.8}>
