@@ -7,9 +7,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/user/userSlice";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignUp() {
     const dispatch = useDispatch();
@@ -19,34 +20,63 @@ export default function SignUp() {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const handleSignUp = async () => {
-        if (!name.trim() || !email.trim() || !password.trim()) {
+        if (!name.trim() || !email.trim() || !password.trim() || !phone.trim()) {
             Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+
+        if (!/^[a-zA-ZÀ-ỹ\s]{2,50}$/.test(name.trim())) {
+            Alert.alert("Error", "Name only contains letters, at least 2 characters");
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            Alert.alert("Error", "Invalid email format");
+            return;
+        }
+
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
+            Alert.alert("Error", "Min 6 chars, include letters and numbers");
+            return;
+        }
+
+        if (!/^\+?\d{9,11}$/.test(phone.replace(/\s/g, ""))) {
+            Alert.alert("Error", "Invalid phone number (9-11 digits)");
             return;
         }
 
         if (!agreed) {
             Alert.alert("Error", "Please agree to the terms");
             return;
-        } 
+        }
 
         try {
             setLoading(true);
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(userCredential.user, { displayName: name });
-            dispatch(setUser(name)); 
+
+            await setDoc(doc(db, "users", userCredential.user.uid), {
+                fullName: name,
+                email,
+                phone,
+                updatedAt: new Date().toISOString(),
+            });
+
+            dispatch(setUser(name));
             Alert.alert("Success", "Account created successfully!");
             navigation.navigate('LogIn');
-            
+
         } catch (error: any) {
             Alert.alert("Error", error.message);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -70,6 +100,7 @@ export default function SignUp() {
                     <FloatingInput label="Full Name" onChangeText={setName} />
                     <FloatingInput label="Email Address" onChangeText={setEmail} />
                     <FloatingInput label="Password" secureText onChangeText={setPassword} />
+                    <FloatingInput label="Phone Number" onChangeText={setPhone} />
                 </View>
 
                 {/* Checkbox */}

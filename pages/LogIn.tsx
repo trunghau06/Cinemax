@@ -26,8 +26,18 @@ export default function LogIn() {
 
     const handleLogIn = async () => {
         if (!email.trim() || !password.trim()) {
-        Alert.alert("Error", "Please fill in all fields");
-        return;
+            Alert.alert("Error", "Please fill in all fields");
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            Alert.alert("Error", "Invalid email format");
+            return;
+        }
+
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
+            Alert.alert("Error", "Min 6 chars, include letters and numbers");
+            return;
         }
 
         try {
@@ -37,8 +47,8 @@ export default function LogIn() {
             if (userCredential.user) {
                 await userCredential.user.reload();
                 const name = userCredential.user.displayName || "User";
-                dispatch(setUser(name)); 
-                navigation.replace("Home"); 
+                dispatch(setUser(name));
+                navigation.replace("Home");
             }
 
         } catch (error: any) {
@@ -46,7 +56,7 @@ export default function LogIn() {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
