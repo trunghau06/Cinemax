@@ -1,20 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, StyleSheet, Animated } from "react-native";
 
 type Props = {
-    value?: string;   
+    value?: string;
     label: string;
     secureText?: boolean;
     onChangeText?: (text: string) => void;
     onBlur?: () => void;
 };
 
-export default function FloatingInput({ label, secureText = false, onChangeText, onBlur }: Props) {
-    const [value, setValue] = useState("");
+export default function FloatingInput({ label, secureText = false, onChangeText, onBlur, value = "" }: Props) {
     const [isFocused, setIsFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const anim = useRef(new Animated.Value(0)).current;
+    const anim = useRef(new Animated.Value(value ? 1 : 0)).current;  
+
+    useEffect(() => {
+        if (value) {
+            Animated.timing(anim, { toValue: 1, duration: 0, useNativeDriver: false }).start();
+        }
+    }, [value]);
 
     const handleFocus = () => {
         setIsFocused(true);
@@ -26,7 +31,7 @@ export default function FloatingInput({ label, secureText = false, onChangeText,
         if (!value) {
             Animated.timing(anim, { toValue: 0, duration: 180, useNativeDriver: false }).start();
         }
-        onBlur?.(); 
+        onBlur?.();
     };
 
     const labelTop   = anim.interpolate({ inputRange: [0, 1], outputRange: [15, -10] });
@@ -42,10 +47,7 @@ export default function FloatingInput({ label, secureText = false, onChangeText,
             <TextInput
                 style={[styles.input, (isFocused || value) && styles.inputActive]}
                 value={value}
-                onChangeText={(text) => {
-                    setValue(text);
-                    onChangeText?.(text); 
-                }}
+                onChangeText={onChangeText}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 secureTextEntry={secureText && !showPassword}
