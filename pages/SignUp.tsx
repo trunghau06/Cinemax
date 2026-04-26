@@ -21,37 +21,54 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
+    const [errors, setErrors] = useState({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+    });
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+    const validateName = (value: string) => {
+        if (!value.trim()) return "Name is required";
+        if (!/^[a-zA-ZÀ-ỹ\s]{2,50}$/.test(value)) return "Invalid name";
+        return "";
+    };
+
+    const validateEmail = (value: string) => {
+        if (!value.trim()) return "Email is required";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email";
+        return "";
+    };
+
+    const validatePassword = (value: string) => {
+        if (!value) return "Password is required";
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(value))
+            return "Min 6 chars, letters + numbers";
+        return "";
+    };
+
+    const validatePhone = (value: string) => {
+        if (!value.trim()) return "Phone is required";
+        if (!/^\+?\d{9,11}$/.test(value.replace(/\s/g, "")))
+            return "Invalid phone number";
+        return "";
+    };
+
     const handleSignUp = async () => {
-        if (!name.trim() || !email.trim() || !password.trim() || !phone.trim()) {
-            Alert.alert("Error", "Please fill in all fields");
-            return;
-        }
+        const nameErr = validateName(name);
+        const emailErr = validateEmail(email);
+        const passErr = validatePassword(password);
+        const phoneErr = validatePhone(phone);
 
-        if (!/^[a-zA-ZÀ-ỹ\s]{2,50}$/.test(name.trim())) {
-            Alert.alert("Error", "Name only contains letters, at least 2 characters");
-            return;
-        }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            Alert.alert("Error", "Invalid email format");
-            return;
-        }
-
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
-            Alert.alert("Error", "Min 6 chars, include letters and numbers");
-            return;
-        }
-
-        if (!/^\+?\d{9,11}$/.test(phone.replace(/\s/g, ""))) {
-            Alert.alert("Error", "Invalid phone number (9-11 digits)");
-            return;
-        }
-
-        if (!agreed) {
-            Alert.alert("Error", "Please agree to the terms");
+        if (nameErr || emailErr || passErr || phoneErr) {
+            setErrors({
+                name: nameErr,
+                email: emailErr,
+                password: passErr,
+                phone: phoneErr,
+            });
             return;
         }
 
@@ -96,10 +113,58 @@ export default function SignUp() {
                 <Text style={styles.title__subtitle}>The latest movies and series{"\n"}are here</Text>
 
                 {/* Form */}
-                <FloatingInput label="Full Name" value={name} onChangeText={setName} />
-                <FloatingInput label="Email Address" value={email} onChangeText={setEmail} />
-                <FloatingInput label="Password" value={password} secureText onChangeText={setPassword} />
-                <FloatingInput label="Phone Number" value={phone} onChangeText={setPhone} />
+                <View style={styles.form}>
+                    <FloatingInput
+                        label="Full Name"
+                        value={name}
+                        onChangeText={(text) => {
+                            setName(text);
+                            setErrors(prev => ({ ...prev, name: validateName(text) }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({ ...prev, name: validateName(name) }));
+                        }}
+                    />
+
+                    {errors.name ? <Text style={{ color: "red", fontSize: 12 }}>{errors.name}</Text> : null}
+                    <FloatingInput
+                        label="Email Address"
+                        value={email}
+                        onChangeText={(text) => {
+                            setEmail(text);
+                            setErrors(prev => ({ ...prev, email: validateEmail(text) }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({ ...prev, email: validateEmail(email) }));
+                        }}
+                    />
+                    {errors.email ? <Text style={{ color: "red", fontSize: 12 }}>{errors.email}</Text> : null}
+                    <FloatingInput
+                        label="Password"
+                        value={password}
+                        secureText
+                        onChangeText={(text) => {
+                            setPassword(text);
+                            setErrors(prev => ({ ...prev, password: validatePassword(text) }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({ ...prev, password: validatePassword(password) }));
+                        }}
+                    />
+                    {errors.password ? <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text> : null}
+                    <FloatingInput
+                        label="Phone Number"
+                        value={phone}
+                        onChangeText={(text) => {
+                            setPhone(text);
+                            setErrors(prev => ({ ...prev, phone: validatePhone(text) }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({ ...prev, phone: validatePhone(phone) }));
+                        }}
+                    />
+                    {errors.phone ? <Text style={{ color: "red", fontSize: 12 }}>{errors.phone}</Text> : null}
+                </View>
 
                 {/* Checkbox */}
                 <TouchableOpacity style={styles.agree} onPress={() => setAgreed(v => !v)} activeOpacity={0.8}>
@@ -121,6 +186,7 @@ export default function SignUp() {
         </SafeAreaView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: { 

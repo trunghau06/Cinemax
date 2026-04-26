@@ -7,7 +7,7 @@ import { auth } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LogoutModal from "../components/LogOutModal";
 
 export default function Profile() {
@@ -19,7 +19,20 @@ export default function Profile() {
         await auth.signOut();
         setShowLogoutModal(false);
         navigation.navigate("LogSign");
-    }
+    };
+
+    const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        const loadUser = async () => {
+            await auth.currentUser?.reload();
+            setEmail(auth.currentUser?.email ?? "");
+        };
+
+        const unsubscribe = navigation.addListener('focus', loadUser);
+
+        return unsubscribe;
+    }, [navigation]);
 
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
@@ -35,7 +48,7 @@ export default function Profile() {
                             {userName ? `${userName}` : "UserName"}
                         </Text>
                         <Text style={styles.cardUser__email}>
-                            {auth.currentUser?.email ?? "UserEmail"}
+                            {email || "UserEmail"}
                         </Text>
                     </View>
                     <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>

@@ -21,22 +21,35 @@ export default function LogIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({
+        email: '',
+        password: '',
+    });
     
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+    const validateEmail = (value: string) => {
+        if (!value.trim()) return "Email is required";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email";
+        return "";
+    };
+
+    const validatePassword = (value: string) => {
+        if (!value) return "Password is required";
+        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(value))
+            return "Min 6 chars, letters + numbers";
+        return "";
+    };
+
     const handleLogIn = async () => {
-        if (!email.trim() || !password.trim()) {
-            Alert.alert("Error", "Please fill in all fields");
-            return;
-        }
+        const emailErr = validateEmail(email);
+        const passErr = validatePassword(password);
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-            Alert.alert("Error", "Invalid email format");
-            return;
-        }
-
-        if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{6,}$/.test(password)) {
-            Alert.alert("Error", "Min 6 chars, include letters and numbers");
+        if (emailErr || passErr) {
+            setErrors({
+                email: emailErr,
+                password: passErr,
+            });
             return;
         }
 
@@ -79,8 +92,47 @@ export default function LogIn() {
 
                 {/* Form */}
                 <View style={styles.form}>
-                    <FloatingInput label="Email Address" value={email} onChangeText={setEmail} />
-                    <FloatingInput label="Password" value={password} secureText onChangeText={setPassword} />
+                    <FloatingInput
+                        label="Email Address"
+                        value={email}
+                        onChangeText={(text) => {
+                            setEmail(text);
+                            setErrors(prev => ({
+                                ...prev,
+                                email: validateEmail(text)
+                            }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({
+                                ...prev,
+                                email: validateEmail(email)
+                            }));
+                        }}
+                    />
+                    {errors.email ? (
+                        <Text style={{ color: "red", fontSize: 12 }}>{errors.email}</Text>
+                    ) : null}
+                    <FloatingInput
+                        label="Password"
+                        value={password}
+                        secureText
+                        onChangeText={(text) => {
+                            setPassword(text);
+                            setErrors(prev => ({
+                                ...prev,
+                                password: validatePassword(text)
+                            }));
+                        }}
+                        onBlur={() => {
+                            setErrors(prev => ({
+                                ...prev,
+                                password: validatePassword(password)
+                            }));
+                        }}
+                    />
+                    {errors.password ? (
+                        <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text>
+                    ) : null}
                 </View>
 
                 <TouchableOpacity style={styles.forgot} onPress={() => navigation.navigate('Forgot')}>

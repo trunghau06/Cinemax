@@ -10,7 +10,7 @@ import { auth, db } from "../services/firebase";
 import FloatingInput from "../components/FloatingInput";
 import { useState, useRef, useEffect } from "react";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
-import { updateProfile, updateEmail, updatePassword } from "firebase/auth";
+import { updateProfile, updateEmail, updatePassword, verifyBeforeUpdateEmail } from "firebase/auth";
 import { setUser } from "../redux/user/userSlice";
 
 export default function EditProfile() {
@@ -103,8 +103,11 @@ export default function EditProfile() {
             await updateProfile(user, { displayName: fullName });
             dispatch(setUser(fullName));
 
-            if(email !== user.email) {
-                await updateEmail(user, email);
+            if (email !== user.email) {
+                await verifyBeforeUpdateEmail(user, email, {
+                    url: "https://cinemax-27832.firebaseapp.com", 
+                    handleCodeInApp: false,
+                });
             }
 
             if (password.trim()) {
@@ -113,7 +116,6 @@ export default function EditProfile() {
 
             await setDoc(doc(db, "users", user.uid), {
                 fullName,
-                email,
                 phone,
                 updatedAt: new Date().toISOString(),
             }, { merge: true });
