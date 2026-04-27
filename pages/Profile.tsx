@@ -10,6 +10,7 @@ import { RootStackParamList } from "../types/navigation";
 import { useEffect, useState } from "react";
 import LogoutModal from "../components/LogOutModal";
 import { setWishList } from "../redux/wishList/wishSlice";
+import { setDownloads } from "../redux/download/downloadSlice";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);
@@ -20,6 +21,7 @@ export default function Profile() {
     const handleLogOut = async () => {
         await auth.signOut();
         dispatch(setWishList([]));
+        dispatch(setDownloads([]));
         setShowLogoutModal(false);
         navigation.navigate("LogSign");
     };

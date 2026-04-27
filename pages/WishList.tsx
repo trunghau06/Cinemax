@@ -6,31 +6,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import WishlistCard from "../components/Card/WishlistCard";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
-import { auth, db } from "../services/firebase";
-import { setWishList } from "../redux/wishList/wishSlice";
-import { collection, getDocs } from "firebase/firestore";
+
 
 export default function WishList() {
-    const favourites = useAppSelector(state => state.wishList.movies);
+    const wishes = useAppSelector(state => state.wishList.movies);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        const loadWishList = async () => {
-            const user = auth.currentUser;
-            if (!user) return;
-
-            const snap = await getDocs(collection(db, "users", user.uid, "wishlist"));
-            const movies = snap.docs.map((doc: { data: () => any; }) => doc.data()) as any[];
-            dispatch(setWishList(movies));
-        };
-        loadWishList();
-    }, []);
-
     return (
         <SafeAreaView style={styles.container} edges={["top"]}>
-            {favourites.length === 0
+            {wishes.length === 0
                 ? <>
                     <View style={styles.header}>
                         <TouchableOpacity style={styles.header__backBtn} onPress={() => navigation.goBack()}>
@@ -50,7 +35,7 @@ export default function WishList() {
                     </View>
                 </>
                 : <FlatList
-                    data={favourites}
+                    data={wishes}
                     keyExtractor={(item) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 40 }}

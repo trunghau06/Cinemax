@@ -3,11 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "../pages/HomePage";
 import { Feather, FontAwesome, Foundation, Ionicons } from "@expo/vector-icons";
 import SearchPage from "../pages/SearchPage";
-import DetailPage from "../pages/DetailPage";
+import DownloadPage from "../pages/Download";
 import { BottomTabParamList } from "../types/navigation";
-import Profile from "../pages/Profile";
-import EditProfile from "../pages/EditProfile";
 import ProfileStack from "./ProfileStack";
+import { useAppSelector } from "../hooks/hooks";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -34,6 +33,9 @@ function TabIcon({ icon, focused }: TabIconProps) {
 }
 
 export default function BottomTabs() {
+    const downloadCount = useAppSelector(
+        state => state.download.movies.length
+    );
     return (
         <Tab.Navigator
             initialRouteName="HomePage"
@@ -83,7 +85,7 @@ export default function BottomTabs() {
             />
             <Tab.Screen
                 name="Download"
-                component={DetailPage}
+                component={DownloadPage}
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
@@ -91,6 +93,12 @@ export default function BottomTabs() {
                             focused={focused}
                         />
                     ),
+                    tabBarBadge:
+                        downloadCount > 0
+                            ? downloadCount > 99
+                                ? "99+"
+                                : downloadCount
+                            : undefined,
                 }}
             />
             <Tab.Screen

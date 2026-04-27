@@ -11,7 +11,7 @@ import { auth, db } from "../services/firebase";
 import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setDownloads } from "../redux/download/downloadSlice";
 import { setUser } from "../redux/user/userSlice";
 import { setWishList } from "../redux/wishList/wishSlice";
 import { collection, getDocs } from "firebase/firestore";
@@ -64,14 +64,24 @@ export default function LogIn() {
                 dispatch(setUser(name));
 
                 try {
-                    const snap = await getDocs(collection(db, "users", userCredential.user.uid, "wishlist"));
-                    const movies = snap.docs.map((doc: any) => doc.data()) as any[];
-                    dispatch(setWishList(movies));
+                    const wishSnap = await getDocs(
+                        collection(db, "users", userCredential.user.uid, "wishlist")
+                    );
+                    const wishMovies = wishSnap.docs.map((doc: any) => doc.data()) as any[];
+                    dispatch(setWishList(wishMovies));
                 } catch (e) {
-                    // user chưa có data trong Firestore, bỏ qua
                     dispatch(setWishList([]));
                 }
 
+                try {
+                    const downloadSnap = await getDocs(
+                        collection(db, "users", userCredential.user.uid, "downloads")
+                    );
+                    const downloadMovies = downloadSnap.docs.map((doc: any) => doc.data()) as any[];
+                    dispatch(setDownloads(downloadMovies));
+                } catch (e) {
+                    dispatch(setDownloads([]));
+                }
                 navigation.replace("Home");
             }
         } catch (error: any) {

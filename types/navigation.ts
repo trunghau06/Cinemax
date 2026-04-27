@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from "@react-navigation/native";
+
 export type RootStackParamList = {
     Onboarding: undefined;
     Splash: undefined;
@@ -5,7 +7,7 @@ export type RootStackParamList = {
     LogIn: undefined;
     SignUp: undefined;
     Forgot: undefined;
-    Home: undefined;
+    Home: NavigatorScreenParams<BottomTabParamList>;
     Detail: { movieId: number }; 
     AllMovies: { type: "Popular" | "Recommended" | "Comedy" | "Animation" | "Documentary" | "Action" | "All"; title: string }
     EditProfile: undefined;

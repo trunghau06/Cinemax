@@ -10,12 +10,12 @@ import { addWishList, removeWishList } from "../redux/wishList/wishSlice";
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../services/firebase";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../types/navigation";
+import { BottomTabParamList, RootStackParamList } from "../types/navigation";
+import { addDownload, removeDownload, updateProgress } from "../redux/download/downloadSlice";
 
 export default function DetailPage() {
     const route = useRoute<any>();
-    const navigation = useNavigation();
-    const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { movieId } = route.params;
     const dispatch = useAppDispatch();
 
@@ -24,8 +24,10 @@ export default function DetailPage() {
     const [playing, setPlaying] = useState(false);
     const [showMore, setShowMore] = useState(false);
 
-    const favourites = useAppSelector(state => state.wishList.movies);
-    const isFavorite = favourites.some((m: any) => m.id === movieId);
+    const wishes = useAppSelector(state => state.wishList.movies);
+    const isWish = wishes.some((m: any) => m.id === movieId);
+    const downloads = useAppSelector(state => state.download.movies);
+    const isDownloaded = downloads.some(m => m.id === movie?.id);
 
     useEffect(() => {
         Promise.all([
@@ -58,13 +60,13 @@ export default function DetailPage() {
         </View>
     );
 
-    const toggleFavorite = async () => {
+    const toggleWish = async () => {
         const user = auth.currentUser;
         if (!user) return;
 
         const ref = doc(db, "users", user.uid, "wishlist", movie.id.toString());
 
-        if (isFavorite) {
+        if (isWish) {
             dispatch(removeWishList(movie.id));
             await deleteDoc(ref);
         } else {
@@ -80,6 +82,56 @@ export default function DetailPage() {
             await setDoc(ref, item);
         }
     };
+
+    const fakeDownload = (id: number, uid: string) => {
+        let progress = 0;
+
+        const interval = setInterval(async () => {
+            progress += Math.floor(Math.random() * 10) + 5;
+
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+            }
+
+            const status = progress >= 100 ? "completed" : "downloading";
+            dispatch(updateProgress({ id, progress, status }));
+
+            const ref = doc(db, "users", uid, "downloads", id.toString());
+            await setDoc(ref, { progress, status }, { merge: true }); 
+        }, 500);
+    };
+
+    const handleDownload = async () => {
+        const user = auth.currentUser;
+        if(!user) return;
+
+        const ref = doc(db, "users", user.uid, "downloads", movie.id.toString());
+        const exists = downloads.some(m => m.id === movie.id);
+
+        if(exists) {
+            dispatch(removeDownload(movie.id));
+            await deleteDoc(ref);
+        } else {
+            const item = {
+                id: movie.id,
+                title: movie.title,
+                poster_path: movie.poster_path,
+                vote_average: movie.vote_average, 
+                genres: movie.genres,
+                type: "Movie",                   
+                progress: 0,
+                status: "downloading" as const,
+            };
+
+            dispatch(addDownload(item));
+            await setDoc(ref, item);
+            fakeDownload(movie.id, user.uid);
+            navigation.navigate("Home", {
+                screen: "Download",
+            });
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -97,15 +149,14 @@ export default function DetailPage() {
                         <Ionicons name="chevron-back" size={24} color="#fff" />
                     </TouchableOpacity>
 
-                    {/* Tim + Badge */}
                     <TouchableOpacity
                         style={[styles.header__back, { position: "relative", overflow: "visible" }]}
-                        onPress={() => navigationRoot.navigate("WishList")}
+                        onPress={() => navigation.navigate("WishList")}
                     >
                         <Ionicons name="heart" size={24} color="#FF4D6D" />
-                        {favourites.length > 0 && (
+                        {wishes.length > 0 && (
                             <View style={styles.badge}>
-                                <Text style={styles.badge__text}>{favourites.length}</Text>
+                                <Text style={styles.badge__text}>{wishes.length}</Text>
                             </View>
                         )}
                     </TouchableOpacity>
@@ -144,12 +195,19 @@ export default function DetailPage() {
                         <Ionicons name="play" size={18} color="#fff" />
                         <Text style={styles.buttons__play__text}>Play</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttons__icon}>
+                    <TouchableOpacity
+                        style={[
+                            styles.buttons__icon,
+                            isDownloaded && { opacity: 0.3 }
+                        ]}
+                        onPress={handleDownload}
+                        disabled={isDownloaded}
+                    >
                         <Feather name="download" size={20} color="#FF6B35" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttons__icon} onPress={toggleFavorite}>
+                    <TouchableOpacity style={styles.buttons__icon} onPress={toggleWish}>
                         <Ionicons
-                            name={isFavorite ? "heart" : "heart-outline"}
+                            name={isWish ? "heart" : "heart-outline"}
                             size={20}
                             color="#FF4D6D"
                         />
