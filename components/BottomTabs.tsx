@@ -6,6 +6,8 @@ import SearchPage from "../pages/SearchPage";
 import DetailPage from "../pages/DetailPage";
 import { BottomTabParamList } from "../types/navigation";
 import Profile from "../pages/Profile";
+import EditProfile from "../pages/EditProfile";
+import ProfileStack from "./ProfileStack";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -93,7 +95,7 @@ export default function BottomTabs() {
             />
             <Tab.Screen
                 name="Profile"
-                component={Profile}
+                component={ProfileStack} 
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon

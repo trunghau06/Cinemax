@@ -56,14 +56,12 @@ export default function LogIn() {
         try {
             setLoading(true);
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
             if (userCredential.user) {
                 await userCredential.user.reload();
                 const name = userCredential.user.displayName || "User";
                 dispatch(setUser(name));
                 navigation.replace("Home");
             }
-
         } catch (error: any) {
             Alert.alert("Error", error.message);
         } finally {
