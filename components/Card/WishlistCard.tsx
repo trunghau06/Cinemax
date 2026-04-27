@@ -1,8 +1,10 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { IMAGE_URL } from "../services/tmdb";
-import { useAppDispatch } from "../hooks/hooks";
-import { removeWishList } from "../redux/wishList/wishSlice";
+import { IMAGE_URL } from "../../services/tmdb";
+import { useAppDispatch } from "../../hooks/hooks";
+import { removeWishList } from "../../redux/wishList/wishSlice";
+import { auth, db } from "../../services/firebase";
+import { deleteDoc, doc } from "firebase/firestore";
 
 interface Props {
     movie: {
@@ -17,6 +19,14 @@ interface Props {
 
 export default function WishlistCard({ movie, onPress }: Props) {
     const dispatch = useAppDispatch();
+
+    const handleRemove = async () => {
+        const user = auth.currentUser;
+        if (user) {
+            await deleteDoc(doc(db, "users", user.uid, "wishlist", String(movie.id)));
+        }
+        dispatch(removeWishList(movie.id));
+    };
 
     return (
         <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.85}>
@@ -47,10 +57,7 @@ export default function WishlistCard({ movie, onPress }: Props) {
                 </View>
             </View>
 
-            <TouchableOpacity
-                style={styles.card__heart}
-                onPress={() => dispatch(removeWishList(movie.id))}
-            >
+            <TouchableOpacity style={styles.card__heart} onPress={handleRemove}>
                 <Ionicons name="heart" size={22} color="#FF4D6D" />
             </TouchableOpacity>
         </TouchableOpacity>
@@ -67,6 +74,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         padding: 10,
         gap: 12,
+        height: 100,  
     },
 
     card__thumbnail: {

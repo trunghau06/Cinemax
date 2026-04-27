@@ -26,6 +26,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import AboutUs from "./pages/AboutUs";
 import HelpFeed from "./pages/HelpFeed";
 import FavoritesPage from "./pages/WishList";
+import WishList from "./pages/WishList";
 
 const Stack = createNativeStackNavigator();
 
@@ -135,8 +136,8 @@ export default function App() {
           />
 
           <Stack.Screen 
-            name="Favorites" 
-            component={FavoritesPage} 
+            name="WishList" 
+            component={WishList} 
           />
         </Stack.Navigator>
       </NavigationContainer>

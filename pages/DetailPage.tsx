@@ -9,10 +9,13 @@ import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { addWishList, removeWishList } from "../redux/wishList/wishSlice";
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../services/firebase";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../types/navigation";
 
 export default function DetailPage() {
     const route = useRoute<any>();
     const navigation = useNavigation();
+    const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { movieId } = route.params;
     const dispatch = useAppDispatch();
 
@@ -49,10 +52,7 @@ export default function DetailPage() {
                 allowsFullscreenVideo
                 mediaPlaybackRequiresUserAction={false}
             />
-            <TouchableOpacity
-                style={styles.back}
-                onPress={() => setPlaying(false)}
-            >
+            <TouchableOpacity style={styles.back} onPress={() => setPlaying(false)}>
                 <Ionicons name="arrow-back" size={24} color="#fff" />
             </TouchableOpacity>
         </View>
@@ -60,15 +60,14 @@ export default function DetailPage() {
 
     const toggleFavorite = async () => {
         const user = auth.currentUser;
-        if(!user) return;
+        if (!user) return;
 
         const ref = doc(db, "users", user.uid, "wishlist", movie.id.toString());
 
         if (isFavorite) {
             dispatch(removeWishList(movie.id));
             await deleteDoc(ref);
-        }
-        else {
+        } else {
             const item = {
                 id: movie.id,
                 title: movie.title,
@@ -80,11 +79,10 @@ export default function DetailPage() {
             dispatch(addWishList(item));
             await setDoc(ref, item);
         }
-    }
+    };
 
     return (
         <View style={styles.container}>
-            {/* Backdrop mờ */}
             <Image
                 source={{ uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` }}
                 style={styles.backdrop}
@@ -93,24 +91,28 @@ export default function DetailPage() {
             />
             <View style={styles.backdrop__overlay} />
 
-            {/* Header */}
             <SafeAreaView edges={["top"]}>
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.header__back} onPress={() => navigation.goBack()}>
                         <Ionicons name="chevron-back" size={24} color="#fff" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.header__back} onPress={toggleFavorite}>
-                        <Ionicons
-                            name={isFavorite ? "heart" : "heart-outline"}
-                            size={24}
-                            color="#FF4D6D"
-                        />
+
+                    {/* Tim + Badge */}
+                    <TouchableOpacity
+                        style={[styles.header__back, { position: "relative", overflow: "visible" }]}
+                        onPress={() => navigationRoot.navigate("WishList")}
+                    >
+                        <Ionicons name="heart" size={24} color="#FF4D6D" />
+                        {favourites.length > 0 && (
+                            <View style={styles.badge}>
+                                <Text style={styles.badge__text}>{favourites.length}</Text>
+                            </View>
+                        )}
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Poster */}
                 <View style={styles.poster__wrapper}>
                     <Image
                         source={{ uri: `${IMAGE_URL}${movie.poster_path}` }}
@@ -121,7 +123,6 @@ export default function DetailPage() {
 
                 <Text style={styles.title} numberOfLines={2}>{movie.title}</Text>
 
-                {/* Meta */}
                 <View style={styles.meta}>
                     <Feather name="calendar" size={13} color="#888" />
                     <Text style={styles.meta__text}>{movie.release_date?.split("-")[0]}</Text>
@@ -133,13 +134,11 @@ export default function DetailPage() {
                     <Text style={styles.meta__text}>{movie.genres?.[0]?.name || "Movie"}</Text>
                 </View>
 
-                {/* Rating */}
                 <View style={styles.rating}>
                     <Ionicons name="star" size={16} color="#FFD700" />
                     <Text style={styles.rating__text}>{movie.vote_average.toFixed(1)}</Text>
                 </View>
 
-                {/* Buttons */}
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.buttons__play} onPress={() => setPlaying(true)}>
                         <Ionicons name="play" size={18} color="#fff" />
@@ -148,12 +147,18 @@ export default function DetailPage() {
                     <TouchableOpacity style={styles.buttons__icon}>
                         <Feather name="download" size={20} color="#FF6B35" />
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttons__icon} onPress={toggleFavorite}>
+                        <Ionicons
+                            name={isFavorite ? "heart" : "heart-outline"}
+                            size={20}
+                            color="#FF4D6D"
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.buttons__icon}>
                         <MaterialIcons name="open-in-new" size={20} color="#00e5ff" />
                     </TouchableOpacity>
                 </View>
 
-                {/* Story Line */}
                 <View style={styles.section}>
                     <Text style={styles.section__title}>Story Line</Text>
                     <Text style={styles.overview} numberOfLines={showMore ? undefined : 4}>
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#161D2F",
     },
-
+    
     loading: {
         flex: 1,
         backgroundColor: "#161D2F",
@@ -212,6 +217,24 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 
+    badge: {
+        position: "absolute",
+        top: -4,
+        right: -4,
+        backgroundColor: "#00e5ff",
+        borderRadius: 8,
+        width: 16,
+        height: 16,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    badge__text: {
+        color: "#fff",
+        fontSize: 10,
+        fontFamily: "PoppinsBold",
+    },
+
     poster__wrapper: {
         alignItems: "center",
         marginTop: 16,
@@ -231,7 +254,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         paddingHorizontal: 32,
         marginBottom: 12,
-        marginTop: 12
+        marginTop: 12,
     },
 
     meta: {
@@ -246,13 +269,13 @@ const styles = StyleSheet.create({
         color: "#888",
         fontSize: 13,
         fontFamily: "PoppinsRegular",
-        lineHeight: 18
+        lineHeight: 18,
     },
 
     meta__divider: {
         color: "#444",
         fontSize: 13,
-        lineHeight: 18
+        lineHeight: 18,
     },
 
     rating: {
@@ -267,7 +290,7 @@ const styles = StyleSheet.create({
         color: "#FFD700",
         fontSize: 16,
         fontFamily: "PoppinsBold",
-        lineHeight: 20
+        lineHeight: 20,
     },
 
     buttons: {

@@ -1,9 +1,9 @@
 import { TouchableOpacity, View, Image, Text, StyleSheet } from "react-native";
-import { IMAGE_URL } from "../services/tmdb";
+import { IMAGE_URL } from "../../services/tmdb";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/navigation";
+import { RootStackParamList } from "../../types/navigation";
 
 const GENRE_NAMES: Record<number, string> = {
     28: "Action", 35: "Comedy", 16: "Animation", 99: "Documentary",

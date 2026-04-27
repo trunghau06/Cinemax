@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Banner from "../components/Banner";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { tmdb } from "../services/tmdb";
-import Card from "../components/Card";
+import Card from "../components/Card/Card";
 import CategoryFilter from "../components/CategoryFilter";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
@@ -27,6 +27,7 @@ export default function HomePage() {
     const [loadingPopular, setLoadingPopular] = useState(false);
     const [loadingCategory, setLoadingCategory] = useState(false);
     const homeInputRef = useRef<TextInput>(null);
+    const wishList = useAppSelector(state => state.wishList.movies);
 
     useFocusEffect(
         useCallback(() => {
@@ -82,8 +83,25 @@ export default function HomePage() {
                         </View>
                     </View>
 
-                    <TouchableOpacity onPress={() => navigationRoot.navigate("Favorites")}>
-                        <Ionicons name="heart-outline" size={28} color="#FF4D6D" />
+                    <TouchableOpacity onPress={() => navigationRoot.navigate("WishList")} style={{ position: "relative" }}>
+                        <Ionicons name="heart" size={28} color="#FF4D6D" />
+                        {wishList.length > 0 && (
+                            <View style={{
+                                position: "absolute",
+                                top: -4,
+                                right: -4,
+                                backgroundColor: "#00e5ff",
+                                borderRadius: 8,
+                                width: 16,
+                                height: 16,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
+                                <Text style={{ color: "#fff", fontSize: 10, fontFamily: "PoppinsBold" }}>
+                                    {wishList.length}
+                                </Text>
+                            </View>
+                        )}
                     </TouchableOpacity>
                 </View>
 

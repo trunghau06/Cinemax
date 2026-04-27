@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from "react-native";
-import WishlistCard from "../components/WishlistCard";
+import WishlistCard from "../components/Card/WishlistCard";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { auth, db } from "../services/firebase";
