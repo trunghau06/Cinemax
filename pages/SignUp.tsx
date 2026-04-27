@@ -85,7 +85,6 @@ export default function SignUp() {
             });
 
             dispatch(setUser(name));
-            Alert.alert("Success", "Account created successfully!");
             navigation.navigate('LogIn');
 
         } catch (error: any) {

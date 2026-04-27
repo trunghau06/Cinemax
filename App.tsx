@@ -25,6 +25,7 @@ import EditProfile from "./pages/EditProfile";
 import PrivacyPage from "./pages/PrivacyPage";
 import AboutUs from "./pages/AboutUs";
 import HelpFeed from "./pages/HelpFeed";
+import FavoritesPage from "./pages/WishList";
 
 const Stack = createNativeStackNavigator();
 
@@ -131,6 +132,11 @@ export default function App() {
           <Stack.Screen 
             name="HelpFeed" 
             component={HelpFeed} 
+          />
+
+          <Stack.Screen 
+            name="Favorites" 
+            component={FavoritesPage} 
           />
         </Stack.Navigator>
       </NavigationContainer>

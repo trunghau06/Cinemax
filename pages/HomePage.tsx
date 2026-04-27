@@ -27,7 +27,6 @@ export default function HomePage() {
     const [loadingPopular, setLoadingPopular] = useState(false);
     const [loadingCategory, setLoadingCategory] = useState(false);
     const homeInputRef = useRef<TextInput>(null);
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
@@ -37,12 +36,6 @@ export default function HomePage() {
 
     const navigation = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
     const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-    const handleLogOut = async () => {
-        await auth.signOut();
-        setShowLogoutModal(false);
-        navigationRoot.navigate("LogSign");
-    }
 
     useEffect(() => {
         setLoadingPopular(true);
@@ -89,8 +82,8 @@ export default function HomePage() {
                         </View>
                     </View>
 
-                    <TouchableOpacity onPress={() => setShowLogoutModal(true)}>
-                        <Ionicons name="log-out-outline" size={28} color="#FF4D6D" />
+                    <TouchableOpacity onPress={() => navigationRoot.navigate("Favorites")}>
+                        <Ionicons name="heart-outline" size={28} color="#FF4D6D" />
                     </TouchableOpacity>
                 </View>
 
@@ -166,11 +159,6 @@ export default function HomePage() {
                     />
                 }
             </ScrollView>
-            <LogoutModal
-                visible={showLogoutModal}
-                onConfirm={handleLogOut}
-                onCancel={() => setShowLogoutModal(false)}
-            />
         </SafeAreaView>
     );
 }

@@ -5,16 +5,24 @@ import { tmdb, IMAGE_URL } from "../services/tmdb";
 import { Ionicons, Feather, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
+import { addWishList, removeWishList } from "../redux/wishList/wishSlice";
+import { doc, setDoc, deleteDoc } from "firebase/firestore";
+import { db, auth } from "../services/firebase";
 
 export default function DetailPage() {
     const route = useRoute<any>();
     const navigation = useNavigation();
     const { movieId } = route.params;
+    const dispatch = useAppDispatch();
 
     const [movie, setMovie] = useState<any>(null);
     const [certification, setCertification] = useState("");
     const [playing, setPlaying] = useState(false);
     const [showMore, setShowMore] = useState(false);
+
+    const favourites = useAppSelector(state => state.wishList.movies);
+    const isFavorite = favourites.some((m: any) => m.id === movieId);
 
     useEffect(() => {
         Promise.all([
@@ -50,6 +58,30 @@ export default function DetailPage() {
         </View>
     );
 
+    const toggleFavorite = async () => {
+        const user = auth.currentUser;
+        if(!user) return;
+
+        const ref = doc(db, "users", user.uid, "wishlist", movie.id.toString());
+
+        if (isFavorite) {
+            dispatch(removeWishList(movie.id));
+            await deleteDoc(ref);
+        }
+        else {
+            const item = {
+                id: movie.id,
+                title: movie.title,
+                poster_path: movie.poster_path,
+                vote_average: movie.vote_average,
+                release_date: movie.release_date,
+                genres: movie.genres,
+            };
+            dispatch(addWishList(item));
+            await setDoc(ref, item);
+        }
+    }
+
     return (
         <View style={styles.container}>
             {/* Backdrop mờ */}
@@ -66,6 +98,13 @@ export default function DetailPage() {
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.header__back} onPress={() => navigation.goBack()}>
                         <Ionicons name="chevron-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.header__back} onPress={toggleFavorite}>
+                        <Ionicons
+                            name={isFavorite ? "heart" : "heart-outline"}
+                            size={24}
+                            color="#FF4D6D"
+                        />
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>

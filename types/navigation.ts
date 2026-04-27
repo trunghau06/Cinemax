@@ -12,6 +12,7 @@ export type RootStackParamList = {
     Privacy: undefined;
     Aboutus: undefined;
     HelpFeed: undefined;
+    Favorites: undefined;
 };
 
 export type BottomTabParamList = {

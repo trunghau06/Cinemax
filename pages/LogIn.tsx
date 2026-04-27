@@ -7,16 +7,18 @@ import { Ionicons } from "@expo/vector-icons";
 import FloatingInput from "../components/FloatingInput";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "../redux/user/userSlice";
+import { setWishList } from "../redux/wishList/wishSlice";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function LogIn() {
-    const dispatch = useDispatch();
-    const userName = useAppSelector(selectUserName);
+    const userName = useAppSelector(selectUserName); 
+    const dispatch = useAppDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -60,6 +62,16 @@ export default function LogIn() {
                 await userCredential.user.reload();
                 const name = userCredential.user.displayName || "User";
                 dispatch(setUser(name));
+
+                try {
+                    const snap = await getDocs(collection(db, "users", userCredential.user.uid, "wishlist"));
+                    const movies = snap.docs.map((doc: any) => doc.data()) as any[];
+                    dispatch(setWishList(movies));
+                } catch (e) {
+                    // user chưa có data trong Firestore, bỏ qua
+                    dispatch(setWishList([]));
+                }
+
                 navigation.replace("Home");
             }
         } catch (error: any) {

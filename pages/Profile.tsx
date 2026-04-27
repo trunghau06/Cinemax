@@ -1,7 +1,7 @@
 import { Feather, FontAwesome6, Foundation, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { selectUserName } from "../redux/user/useSelectors";
 import { auth } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -9,14 +9,17 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
 import { useEffect, useState } from "react";
 import LogoutModal from "../components/LogOutModal";
+import { setWishList } from "../redux/wishList/wishSlice";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const dispatch = useAppDispatch();
 
     const handleLogOut = async () => {
         await auth.signOut();
+        dispatch(setWishList([]));
         setShowLogoutModal(false);
         navigation.navigate("LogSign");
     };
