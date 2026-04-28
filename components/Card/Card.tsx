@@ -57,12 +57,14 @@ const styles = StyleSheet.create({
         width: 150,
         marginRight: 12
     },
+
     card__poster: {
         width: 140,
         height: 200,
         borderRadius: 12,
         marginBottom: 8,
     },
+
     card__rating: {
         position: "absolute",
         top: 4,
@@ -75,16 +77,19 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 8,
     },
+
     card__ratingText: {
         color: "#FFD700",
         fontSize: 12,
         fontFamily: "PoppinsBold",
     },
+
     card__title: {
         color: "#FFFFFF",
         fontSize: 14,
         fontFamily: "PoppinsBold",
     },
+    
     card__genre: {
         color: "#888",
         fontSize: 12,

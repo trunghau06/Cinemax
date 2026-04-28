@@ -12,12 +12,12 @@ import { deleteDoc, doc } from "firebase/firestore";
 import DownloadCard from "../components/Card/DownloadCard";
 
 export default function Download() {
-    const downloads = useAppSelector(state => state.download.movies);
+    const downloads  = useAppSelector(state => state.download.movies);
     const downloadCount = downloads.length;
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const dispatch = useAppDispatch();
+    const dispatch   = useAppDispatch();
 
-    const [selectMode, setSelectMode] = useState(false);
+    const [selectMode, setSelectMode]   = useState(false);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
     useFocusEffect(

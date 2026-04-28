@@ -16,7 +16,7 @@ export default function AllMoviesPage() {
     const { type, title } = route.params;
 
     const [loading, setLoading] = useState(false);
-    const [movies, setMovies] = useState<any[]>([]);
+    const [movies, setMovies]   = useState<any[]>([]);
 
     useEffect(() => {
         setLoading(true);

@@ -31,21 +31,17 @@ export default function AppContent({ initialRoute }: any) {
     const dispatch = useAppDispatch();
     const [ready, setReady] = useState(false);
 
-    // 🔥 FIX CHÍNH: đợi Firebase restore auth trước khi fetch data
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (user) => {
             if (user) {
                 dispatch(fetchDownloads());
                 dispatch(fetchWishList());
             }
-
             setReady(true);
         });
-
         return unsub;
     }, []);
 
-    // ẩn navigation bar
     useEffect(() => {
         NavigationBar.setVisibilityAsync("hidden");
     }, []);

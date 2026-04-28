@@ -13,7 +13,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { BottomTabParamList, RootStackParamList } from "../types/navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
-import LogoutModal from "../components/LogOutModal";
 
 const GENRE_MAP: Record<string, number> = {
     Comedy: 35, Animation: 16, Documentary: 99, Action: 28,
@@ -35,7 +34,7 @@ export default function HomePage() {
         }, [])
     );
 
-    const navigation = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
+    const navigation    = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
     const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {

@@ -28,7 +28,7 @@ const FAQS = [
 export default function HelpFeedback() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-    const [feedback, setFeedback] = useState("");
+    const [feedback, setFeedback]   = useState("");
     const [feedbackError, setFeedbackError] = useState("");
 
     const handleSend = () => {

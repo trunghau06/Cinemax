@@ -79,8 +79,15 @@ export default function ForgotPassword() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#161D2F" },
-    scroll: { paddingHorizontal: 24, paddingBottom: 40 },
+    container: { 
+        flex: 1, 
+        backgroundColor: "#161D2F" 
+    },
+    
+    scroll: { 
+        paddingHorizontal: 24, 
+        paddingBottom: 40 
+    },
 
     header: {
         flexDirection: "row",
@@ -120,5 +127,10 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         alignItems: "center",
     },
-    nextBtn__text: { color: "#fff", fontSize: 16, fontFamily: "PoppinsBold" },
+
+    nextBtn__text: { 
+        color: "#fff", 
+        fontSize: 16, 
+        fontFamily: "PoppinsBold" 
+    },
 });

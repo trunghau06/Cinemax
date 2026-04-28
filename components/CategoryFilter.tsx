@@ -39,14 +39,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 8
     },
+
     "btn--active": {
         backgroundColor: "rgba(0, 229, 255, 0.15)",
     },
+
     text: {
         color: "#888",
         fontSize: 14,
         fontFamily: "PoppinsRegular",
     },
+    
     "text--active": {
         color: "#00e5ff",
         fontFamily: "PoppinsBold",

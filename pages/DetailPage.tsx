@@ -15,13 +15,13 @@ import { addDownload, removeDownload, updateProgress } from "../redux/download/d
 
 export default function DetailPage() {
     const route = useRoute<any>();
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation  = useNavigation<StackNavigationProp<RootStackParamList>>();
     const { movieId } = route.params;
     const dispatch = useAppDispatch();
 
     const [movie, setMovie] = useState<any>(null);
     const [certification, setCertification] = useState("");
-    const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying]   = useState(false);
     const [showMore, setShowMore] = useState(false);
 
     const wishes = useAppSelector(state => state.wishList.movies);

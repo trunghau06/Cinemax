@@ -15,23 +15,22 @@ import { setUser } from "../redux/user/userSlice";
 
 export default function EditProfile() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const userName = useAppSelector(selectUserName);
+    const userName   = useAppSelector(selectUserName);
 
     const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
 
-    const [nameError, setNameError] = useState("");
+    const [nameError, setNameError]   = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [phoneError, setPhoneError] = useState("");
-    const [avatar, setAvatar] = useState<string | null>(null);
 
     const fullNameRef = useRef("");
-    const emailRef = useRef("");
+    const emailRef    = useRef("");
     const passwordRef = useRef("");
-    const phoneRef = useRef("");
+    const phoneRef    = useRef("");
 
     const dispatch = useAppDispatch();
     useEffect(() => {
