@@ -14,7 +14,7 @@ export default function LogoutModal({ visible, onConfirm, onCancel }: Props) {
                     {/* Icon */}
                     <View style={styles.iconWrapper}>
                         <Image
-                            source={require('../assets/Popup_Logout/Question.png')}
+                            source={require('../../assets/Popup_Logout/Question.png')}
                             style={styles.iconImage}
                             resizeMode="contain"
                         />
