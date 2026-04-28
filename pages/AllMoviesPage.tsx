@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { tmdb } from "../services/tmdb";
-import MovieRow from "../components/Card/MovieRow";
+import MovieRow from "../components/ui/Card/MovieRow";
 
 const GENRE_MAP: Record<string, number> = {
     Comedy: 35, Animation: 16, Documentary: 99, Action: 28,

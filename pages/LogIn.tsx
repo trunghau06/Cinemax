@@ -4,16 +4,16 @@ import { ScrollView, TouchableOpacity, View, Text, StyleSheet, Alert } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
-import FloatingInput from "../components/FloatingInput";
+import FloatingInput from "../components/ui/FloatingInput";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../services/firebase";
 import { useDispatch } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { selectUserName } from "../redux/user/useSelectors";
-import { setDownloads } from "../redux/download/downloadSlice";
-import { setUser } from "../redux/user/userSlice";
-import { setWishList } from "../redux/wishList/wishSlice";
+import { selectUserName } from "../redux/features/user/useSelectors";
+import { setDownloads } from "../redux/features/download/downloadSlice";
+import { setUser } from "../redux/features/user/userSlice";
+import { setWishList } from "../redux/features/wishList/wishSlice";
 import { collection, getDocs } from "firebase/firestore";
 
 export default function LogIn() {

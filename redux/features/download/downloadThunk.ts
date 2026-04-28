@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from './../services/firebase';
-import { setDownloads } from "../redux/download/downloadSlice";
+import { auth, db } from '../../../services/firebase';
+import { setDownloads } from "./downloadSlice";
 
 export const fetchDownloads = () => async (dispatch: any) => {
     const user = auth.currentUser;

@@ -1,6 +1,6 @@
-import { auth, db } from './../services/firebase';
+import { auth, db } from '../../../services/firebase';
 import { collection, getDocs } from "firebase/firestore";
-import { setWishList } from '../redux/wishList/wishSlice';
+import { setWishList } from './wishSlice';
 
 export const fetchWishList = () => async (dispatch: any) => {
     const user = auth.currentUser;

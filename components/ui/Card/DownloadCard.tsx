@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { IMAGE_URL } from "../../services/tmdb";
+import { IMAGE_URL } from "../../../services/tmdb";
 
 interface Props {
     movie: {

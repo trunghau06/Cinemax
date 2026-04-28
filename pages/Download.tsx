@@ -7,9 +7,9 @@ import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from "react
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useState } from "react";
 import { auth, db } from "../services/firebase";
-import { removeDownload } from "../redux/download/downloadSlice";
+import { removeDownload } from "../redux/features/download/downloadSlice";
 import { deleteDoc, doc } from "firebase/firestore";
-import DownloadCard from "../components/Card/DownloadCard";
+import DownloadCard from "../components/ui/Card/DownloadCard";
 
 export default function Download() {
     const downloads  = useAppSelector(state => state.download.movies);

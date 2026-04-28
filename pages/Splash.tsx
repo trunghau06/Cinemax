@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParamList } from "../types/navigation";
 import { auth } from "../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { setUser } from "../redux/user/userSlice";
+import { setUser } from "../redux/features/user/userSlice";
 import { useAppDispatch } from "../hooks/hooks";
 
 export default function Splash() {

@@ -1,14 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity, TextInput, FlatList, ActivityIndicator } from "react-native";
 import { useAppSelector } from "../hooks/hooks";
-import { selectUserName } from "../redux/user/useSelectors";
+import { selectUserName } from "../redux/features/user/useSelectors";
 import { auth } from "../services/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Banner from "../components/Banner";
+import Banner from "../components/layout/Banner";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { tmdb } from "../services/tmdb";
-import Card from "../components/Card/Card";
-import CategoryFilter from "../components/CategoryFilter";
+import Card from "../components/ui/Card/Card";
+import CategoryFilter from "../components/ui/CategoryFilter";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { BottomTabParamList, RootStackParamList } from "../types/navigation";

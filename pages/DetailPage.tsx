@@ -6,12 +6,12 @@ import { Ionicons, Feather, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { addWishList, removeWishList } from "../redux/wishList/wishSlice";
+import { addWishList, removeWishList } from "../redux/features/wishList/wishSlice";
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db, auth } from "../services/firebase";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomTabParamList, RootStackParamList } from "../types/navigation";
-import { addDownload, removeDownload, updateProgress } from "../redux/download/downloadSlice";
+import { addDownload, removeDownload, updateProgress } from "../redux/features/download/downloadSlice";
 
 export default function DetailPage() {
     const route = useRoute<any>();

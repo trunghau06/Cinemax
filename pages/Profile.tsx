@@ -2,15 +2,15 @@ import { Feather, FontAwesome6, Foundation, Ionicons, MaterialIcons } from "@exp
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { selectUserName } from "../redux/user/useSelectors";
+import { selectUserName } from "../redux/features/user/useSelectors";
 import { auth } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
 import { useEffect, useState } from "react";
-import LogoutModal from "../components/LogOutModal";
-import { setWishList } from "../redux/wishList/wishSlice";
-import { setDownloads } from "../redux/download/downloadSlice";
+import LogoutModal from "../components/modals/LogOutModal";
+import { setWishList } from "../redux/features/wishList/wishSlice";
+import { setDownloads } from "../redux/features/download/downloadSlice";
 
 export default function Profile() {
     const userName = useAppSelector(selectUserName);

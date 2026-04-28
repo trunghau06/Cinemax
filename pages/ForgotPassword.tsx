@@ -4,7 +4,7 @@ import { ScrollView, TouchableOpacity, View, Text, StyleSheet, Alert } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/navigation";
 import { Ionicons } from "@expo/vector-icons";
-import FloatingInput from "../components/FloatingInput";
+import FloatingInput from "../components/ui/FloatingInput";
 import { useState } from "react";
 import { auth } from "../services/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";

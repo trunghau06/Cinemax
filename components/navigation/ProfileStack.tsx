@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Profile from "../pages/Profile";
-import EditProfile from "../pages/EditProfile";
+import Profile from "../../pages/Profile";
+import EditProfile from "../../pages/EditProfile";
 
 const Stack = createNativeStackNavigator();
 

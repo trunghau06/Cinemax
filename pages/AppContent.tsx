@@ -9,7 +9,7 @@ import LogSign from "../pages/LogSign";
 import LogIn from "../pages/LogIn";
 import SignUp from "../pages/SignUp";
 import ForgotPassword from "../pages/ForgotPassword";
-import BottomTabs from "../components/BottomTabs";
+import BottomTabs from "../components/navigation/BottomTabs";
 import DetailPage from "../pages/DetailPage";
 import AllMoviesPage from "../pages/AllMoviesPage";
 import EditProfile from "../pages/EditProfile";
@@ -19,8 +19,8 @@ import HelpFeed from "../pages/HelpFeed";
 import WishList from "../pages/WishList";
 
 import { useAppDispatch } from "../hooks/hooks";
-import { fetchDownloads } from "../thunk/downloadThunk";
-import { fetchWishList } from "../thunk/wishlistThunk";
+import { fetchDownloads } from "../redux/features/download/downloadThunk";
+import { fetchWishList } from "../redux/features/wishList/wishlistThunk";
 
 import { auth } from "../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";

@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView, StyleSheet, Text, TextInput, View, ActivityIndicator, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CategoryFilter from "../components/CategoryFilter";
-import MovieRow from "../components/Card/MovieRow";
+import CategoryFilter from "../components/ui/CategoryFilter";
+import MovieRow from "../components/ui/Card/MovieRow";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { tmdb } from "../services/tmdb";
-import Card from "../components/Card/Card";
+import Card from "../components/ui/Card/Card";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";

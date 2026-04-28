@@ -5,13 +5,13 @@ import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, KeyboardAv
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackParamList } from "../types/navigation";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { selectUserName } from "../redux/user/useSelectors";
+import { selectUserName } from "../redux/features/user/useSelectors";
 import { auth, db } from "../services/firebase";
-import FloatingInput from "../components/FloatingInput";
+import FloatingInput from "../components/ui/FloatingInput";
 import { useState, useRef, useEffect } from "react";
 import { doc, getDoc, setDoc } from "@firebase/firestore";
 import { updateProfile, updateEmail, updatePassword, verifyBeforeUpdateEmail } from "firebase/auth";
-import { setUser } from "../redux/user/userSlice";
+import { setUser } from "../redux/features/user/userSlice";
 
 export default function EditProfile() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

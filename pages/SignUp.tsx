@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FloatingInput from "../components/FloatingInput";
+import FloatingInput from "../components/ui/FloatingInput";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -9,7 +9,7 @@ import { RootStackParamList } from "../types/navigation";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../services/firebase";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/user/userSlice";
+import { setUser } from "../redux/features/user/userSlice";
 import { doc, setDoc } from "firebase/firestore";
 
 export default function SignUp() {

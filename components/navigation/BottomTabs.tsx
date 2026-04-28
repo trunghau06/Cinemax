@@ -1,12 +1,12 @@
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomePage from "../pages/HomePage";
+import HomePage from "../../pages/HomePage";
 import { Feather, FontAwesome, Foundation, Ionicons } from "@expo/vector-icons";
-import SearchPage from "../pages/SearchPage";
-import DownloadPage from "../pages/Download";
-import { BottomTabParamList } from "../types/navigation";
+import SearchPage from "../../pages/SearchPage";
+import DownloadPage from "../../pages/Download";
+import { BottomTabParamList } from "../../types/navigation";
 import ProfileStack from "./ProfileStack";
-import { useAppSelector } from "../hooks/hooks";
+import { useAppSelector } from "../../hooks/hooks";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 

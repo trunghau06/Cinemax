@@ -1,9 +1,9 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { IMAGE_URL } from "../../services/tmdb";
-import { useAppDispatch } from "../../hooks/hooks";
-import { removeWishList } from "../../redux/wishList/wishSlice";
-import { auth, db } from "../../services/firebase";
+import { IMAGE_URL } from "../../../services/tmdb";
+import { useAppDispatch } from "../../../hooks/hooks";
+import { removeWishList } from "../../../redux/features/wishList/wishSlice";
+import { auth, db } from "../../../services/firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 
 interface Props {

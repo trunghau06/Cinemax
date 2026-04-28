@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/navigation";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, StyleSheet, Text, FlatList, TouchableOpacity, Image } from "react-native";
-import WishlistCard from "../components/Card/WishlistCard";
+import WishlistCard from "../components/ui/Card/WishlistCard";
 import { Ionicons } from "@expo/vector-icons";
 
 
