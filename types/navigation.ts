@@ -9,7 +9,25 @@ export type RootStackParamList = {
     Forgot: undefined;
     Home: NavigatorScreenParams<BottomTabParamList>;
     Detail: { movieId: number }; 
-    AllMovies: { type: "Popular" | "Recommended" | "Comedy" | "Animation" | "Documentary" | "Action" | "All"; title: string }
+    AllMovies: {
+        type:
+            | "Popular"
+            | "Recommended"
+            | "Comedy"
+            | "Animation"
+            | "Documentary"
+            | "Action"
+            | "Filter"
+            | "All";
+
+        title: string;
+
+        filters?: {
+            rating?: number | null;
+            year?: string | null;
+            sort?: string | null;
+        };
+    };
     EditProfile: undefined;
     Privacy: undefined;
     Aboutus: undefined;

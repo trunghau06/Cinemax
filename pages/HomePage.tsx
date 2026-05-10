@@ -13,6 +13,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { BottomTabParamList, RootStackParamList } from "../types/navigation";
 import { StackNavigationProp } from "@react-navigation/stack";
+import FilterModal from "../components/modals/FilterModal";
 
 const GENRE_MAP: Record<string, number> = {
     Comedy: 35, Animation: 16, Documentary: 99, Action: 28,
@@ -27,15 +28,25 @@ export default function HomePage() {
     const [loadingCategory, setLoadingCategory] = useState(false);
     const homeInputRef = useRef<TextInput>(null);
     const wishList = useAppSelector(state => state.wishList.movies);
+    const [showFilter, setShowFilter] = useState(false);
+
+    const [selectedRating, setSelectedRating] = useState<number | null>(null);
+    const [selectedYear, setSelectedYear] = useState<string | null>(null);
+    const [selectedSort, setSelectedSort] = useState<string | null>(null);
+        
+    const navigation     = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
+    const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     useFocusEffect(
         useCallback(() => {
             homeInputRef.current?.clear();
+
+            setSelectedRating(null);
+            setSelectedYear(null);
+            setSelectedSort(null);
+
         }, [])
     );
-
-    const navigation    = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
-    const navigationRoot = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         setLoadingPopular(true);
@@ -119,7 +130,9 @@ export default function HomePage() {
                         }}
                     />
                     <View style={styles.search__divider} />
-                    <Ionicons name="options-outline" size={20} color="#fff" />
+                    <TouchableOpacity onPress={() => setShowFilter(true)}>
+                        <Ionicons name="options-outline" size={20} color="#fff" />
+                    </TouchableOpacity>
                 </TouchableOpacity>
 
                 {/* Banner */}
@@ -176,6 +189,29 @@ export default function HomePage() {
                     />
                 }
             </ScrollView>
+            <FilterModal
+                visible={showFilter}
+                selectedRating={selectedRating}
+                setSelectedRating={setSelectedRating}
+                selectedYear={selectedYear}
+                setSelectedYear={setSelectedYear}
+                selectedSort={selectedSort}
+                setSelectedSort={setSelectedSort}
+                onClose={() => setShowFilter(false)}
+                onApply={() => {
+                    setShowFilter(false);
+
+                    navigationRoot.navigate("AllMovies", {
+                        type: "Filter",
+                        title: "Filter Result",
+                        filters: {
+                            rating: selectedRating,
+                            year: selectedYear,
+                            sort: selectedSort,
+                        }
+                    });
+                }}
+            />
         </SafeAreaView>
     );
 }
